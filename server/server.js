@@ -1,4 +1,5 @@
 const { StatusCodes } = require('http-status-codes')
+require('dotenv').config()
 const mongoose = require('mongoose')
 const express = require('express')
 const app = express()
@@ -6,33 +7,24 @@ app.use(express.json())
 
 // models
 const User = require('./models/user.model')
-require('dotenv').config()
+// port
 const PORT = process.env.PORT || 5000
+
+// routes
+const { userRouter } = require('./routes')
+const { notFound, errHandler } = require('./middleware')
 
 app.get('/', (req, res) => {
   res.send('hellow from server')
 })
 
-app.post('/', async (req, res, next) => {
-  try {
-    const { userName } = req.body
-    console.log(userName)
-    const user = await User.create({ userName })
-    console.log(user)
-    res.json(user)
-  } catch (err) {
-    next(err)
-  }
-})
+app.use('/users', userRouter)
 
 // not found route
-app.use((req, res) => {
-  res.status(StatusCodes.NOT_FOUND).send('page not found')
-})
+app.use(notFound)
+
 // global error handler
-app.use((err, req, res, next) => {
-  res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ err })
-})
+app.use(errHandler)
 
 mongoose
   .connect(process.env.MONGO_URI)
