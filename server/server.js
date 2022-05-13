@@ -11,21 +11,23 @@ const User = require('./models/user.model')
 const PORT = process.env.PORT || 5000
 
 // routes
-const { userRouter } = require('./routes')
-const { notFound, errHandler } = require('./middleware')
+const { userRouter, postRouter, profileRouter } = require('./routes')
 
 app.get('/', (req, res) => {
   res.send('hellow from server')
 })
 
-app.use('/users', userRouter)
+app.use('/api/users', userRouter)
+app.use('/api/posts', postRouter)
+app.use('/api/profile', profileRouter)
 
-// not found route
+// middlewares
+const { notFound, errHandler } = require('./middleware')
+
 app.use(notFound)
-
-// global error handler
 app.use(errHandler)
 
+// connect to monngose atlas and server
 mongoose
   .connect(process.env.MONGO_URI)
   .then(
