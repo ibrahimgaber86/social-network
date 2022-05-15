@@ -1,5 +1,11 @@
-const { getAllUsers } = require('./user.controller')
+const { getAllUsers, userRegister, userLogin } = require('./user.controller')
 const { getAllPosts } = require('./post.controller')
 const { getAllProfiles } = require('./profile.controller')
 
-module.exports = { getAllUsers, getAllPosts, getAllProfiles }
+module.exports = {
+  getAllUsers,
+  userRegister,
+  userLogin,
+  getAllPosts,
+  getAllProfiles,
+}
